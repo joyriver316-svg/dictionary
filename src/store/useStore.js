@@ -82,6 +82,12 @@ const useStore = create((set, get) => ({
         get().setActiveCategory(newCategory.id);
     },
 
+    updateCategory: (id, newName) => set((state) => ({
+        categories: state.categories.map(cat =>
+            cat.id === id ? { ...cat, name: newName } : cat
+        )
+    })),
+
     setActiveTab: (tab) => set({ activeTab: tab }),
 
     loadCategoryData: (categoryId) => {

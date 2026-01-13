@@ -14,7 +14,10 @@ const Header = () => {
                 <div className="w-8 h-8 bg-blue-600 rounded-md flex items-center justify-center font-bold text-lg">
                     K
                 </div>
-                <span className="font-semibold text-lg tracking-tight">KNOWLEARN Orchestra</span>
+                <div className="flex flex-col -space-y-0.5">
+                    <span className="font-semibold text-base tracking-tight leading-tight">KNOWLEARN Ontology</span>
+                    <span className="text-[10px] text-blue-200 font-light tracking-wider">Ontology-RAG Explorer</span>
+                </div>
             </div>
 
             {/* Center Area: Active Workspace Name */}

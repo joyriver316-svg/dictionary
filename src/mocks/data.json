@@ -33,10 +33,12 @@
                     "chunks": [
                         {
                             "id": "chk1",
+                            "source": "Standard Criteria for Skin Types_v2.pdf",
                             "content": "색소 침착 정도는 멜라닌 생성과 분포에 따라 결정되며, 피부 톤과 얼룩덜룩함을 평가하는 중요한 지표입니다."
                         },
                         {
                             "id": "chk2",
+                            "source": "Standard Criteria for Skin Types_v2.pdf",
                             "content": "자외선 노출로 인한 색소 침착은 피부 노화의 주요 징후 중 하나로 간주됩니다."
                         }
                     ]

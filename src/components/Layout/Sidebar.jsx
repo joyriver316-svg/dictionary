@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Book, Network, Sparkles, Plus, Search, Check, X, ChevronRight, ChevronDown, AlignLeft } from 'lucide-react';
+import { Book, Network, Sparkles, Plus, Search, Check, X, ChevronRight, ChevronDown, AlignLeft, Pencil } from 'lucide-react';
 import classNames from 'classnames';
 import useStore from '../../store/useStore';
 
@@ -11,12 +11,12 @@ const Sidebar = () => {
         activeCategoryId,
         setActiveCategory,
         initialize,
-        addCategory
+        updateCategory
     } = useStore();
 
     const [isMenuOpen, setIsMenuOpen] = useState(true);
-    const [isAdding, setIsAdding] = useState(false);
-    const [newCategoryName, setNewCategoryName] = useState("");
+    const [editingCategoryId, setEditingCategoryId] = useState(null);
+    const [editingName, setEditingName] = useState("");
     const [searchTerm, setSearchTerm] = useState("");
 
     // Initialize categories on mount
@@ -37,12 +37,22 @@ const Sidebar = () => {
         category.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
-    const handleAddCategory = () => {
-        if (newCategoryName.trim()) {
-            addCategory(newCategoryName);
-            setNewCategoryName("");
-            setIsAdding(false);
+    const handleStartEdit = (category) => {
+        setEditingCategoryId(category.id);
+        setEditingName(category.name);
+    };
+
+    const handleSaveEdit = () => {
+        if (editingName.trim()) {
+            updateCategory(editingCategoryId, editingName);
+            setEditingCategoryId(null);
+            setEditingName("");
         }
+    };
+
+    const handleCancelEdit = () => {
+        setEditingCategoryId(null);
+        setEditingName("");
     };
 
     return (
@@ -89,13 +99,7 @@ const Sidebar = () => {
                 <div className="flex-1 overflow-hidden flex flex-col min-h-0">
                     <div className="px-4 pt-4 pb-2 flex items-center justify-between">
                         <h2 className="text-xs font-semibold text-gray-500 uppercase tracking-wider">카테고리</h2>
-                        <button
-                            onClick={() => setIsAdding(true)}
-                            className="p-1 hover:bg-gray-100 rounded text-gray-400 hover:text-blue-600 transition-colors"
-                            title="카테고리 추가"
-                        >
-                            <Plus size={14} />
-                        </button>
+                        {/* No Add Button */}
                     </div>
 
                     {/* Search */}
@@ -114,46 +118,54 @@ const Sidebar = () => {
 
                     {/* List */}
                     <div className="flex-1 overflow-y-auto px-2 pb-2 space-y-0.5 scrollbar-thin scrollbar-thumb-gray-200">
-                        {isAdding && (
-                            <div className="px-2 py-1 mb-1">
-                                <div className="flex items-center gap-1">
-                                    <input
-                                        type="text"
-                                        value={newCategoryName}
-                                        onChange={(e) => setNewCategoryName(e.target.value)}
-                                        placeholder="새 카테고리"
-                                        className="w-full text-xs border border-blue-300 rounded px-2 py-1.5 focus:outline-none focus:ring-1 focus:ring-blue-500"
-                                        autoFocus
-                                        onKeyDown={(e) => {
-                                            if (e.key === 'Enter') handleAddCategory();
-                                            if (e.key === 'Escape') setIsAdding(false);
-                                        }}
-                                    />
-                                    <button onClick={handleAddCategory} className="p-1 text-green-600 hover:bg-green-50 rounded">
-                                        <Check size={12} />
-                                    </button>
-                                    <button onClick={() => setIsAdding(false)} className="p-1 text-red-500 hover:bg-red-50 rounded">
-                                        <X size={12} />
-                                    </button>
-                                </div>
-                            </div>
-                        )}
                         {filteredCategories.map((category) => (
-                            <button
-                                key={category.id}
-                                onClick={() => setActiveCategory(category.id)}
-                                className={classNames(
-                                    "w-full text-left px-3 py-2 rounded-md text-sm transition-all duration-150 flex items-center justify-between group",
-                                    activeCategoryId === category.id
-                                        ? "bg-blue-50 text-blue-700 font-medium"
-                                        : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                            <div key={category.id}>
+                                {editingCategoryId === category.id ? (
+                                    <div className="px-2 py-1 bg-blue-50 rounded-md ring-1 ring-blue-500 flex items-center gap-1">
+                                        <input
+                                            type="text"
+                                            value={editingName}
+                                            onChange={(e) => setEditingName(e.target.value)}
+                                            className="flex-1 min-w-0 text-xs border-transparent bg-transparent focus:outline-none"
+                                            autoFocus
+                                            onKeyDown={(e) => {
+                                                if (e.key === 'Enter') handleSaveEdit();
+                                                if (e.key === 'Escape') handleCancelEdit();
+                                            }}
+                                        />
+                                        <button onClick={handleSaveEdit} className="p-1 text-green-600 hover:bg-green-100 rounded flex-shrink-0">
+                                            <Check size={12} />
+                                        </button>
+                                        <button onClick={handleCancelEdit} className="p-1 text-red-500 hover:bg-red-100 rounded flex-shrink-0">
+                                            <X size={12} />
+                                        </button>
+                                    </div>
+                                ) : (
+                                    <button
+                                        onClick={() => setActiveCategory(category.id)}
+                                        className={classNames(
+                                            "w-full text-left px-3 py-2 rounded-md text-sm transition-all duration-150 flex items-center justify-between group",
+                                            activeCategoryId === category.id
+                                                ? "bg-blue-50 text-blue-700 font-medium"
+                                                : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                                        )}
+                                    >
+                                        <span className="truncate flex-1">{category.name}</span>
+                                        <div className="flex items-center gap-1 ml-2">
+                                            <div
+                                                onClick={(e) => { e.stopPropagation(); handleStartEdit(category); }}
+                                                className="p-1 text-gray-400 hover:text-blue-600 hover:bg-blue-100 rounded opacity-0 group-hover:opacity-100 transition-opacity"
+                                                title="수정"
+                                            >
+                                                <Pencil size={12} />
+                                            </div>
+                                            {activeCategoryId === category.id && <ChevronRight size={14} className="text-blue-500" />}
+                                        </div>
+                                    </button>
                                 )}
-                            >
-                                <span className="truncate">{category.name}</span>
-                                {activeCategoryId === category.id && <ChevronRight size={14} className="text-blue-500" />}
-                            </button>
+                            </div>
                         ))}
-                        {filteredCategories.length === 0 && !isAdding && (
+                        {filteredCategories.length === 0 && (
                             <div className="text-center py-4 text-xs text-gray-400">
                                 {searchTerm ? '검색 결과가 없습니다.' : '카테고리가 없습니다.'}
                             </div>

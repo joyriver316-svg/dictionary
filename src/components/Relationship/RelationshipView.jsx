@@ -1,16 +1,22 @@
 import React, { useState } from 'react';
 import useStore from '../../store/useStore';
-import { Network, Pencil, PlusCircle, GitMerge, Search } from 'lucide-react';
+import { Network, Pencil, PlusCircle, GitMerge, Search, FileText, ChevronRight, ChevronLeft } from 'lucide-react';
 import classNames from 'classnames';
+import ChunkViewer from '../Dictionary/ChunkViewer';
+import GraphVisualizer from './GraphVisualizer';
 
 const RelationshipView = () => {
-    const { activeCategoryId, relationshipDictionary } = useStore();
+    const { activeCategoryId, relationshipDictionary, knTypeData } = useStore();
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [isMergeModalOpen, setIsMergeModalOpen] = useState(false);
     const [editingItem, setEditingItem] = useState(null);
     const [mergingItem, setMergingItem] = useState(null);
     const [mergeSearchTerm, setMergeSearchTerm] = useState("");
     const [listSearchTerm, setListSearchTerm] = useState("");
+
+    const [selectedTerm, setSelectedTerm] = useState(null);
+    const [activeTab, setActiveTab] = useState('doc'); // 'doc' or 'graph'
+    const [isDetailOpen, setIsDetailOpen] = useState(true);
 
     const data = relationshipDictionary || [];
 
@@ -20,9 +26,6 @@ const RelationshipView = () => {
         item.term_en.toLowerCase().includes(listSearchTerm.toLowerCase()) ||
         (item.description && item.description.toLowerCase().includes(listSearchTerm.toLowerCase()))
     );
-
-    // Determine max chunk count for relative bar width
-    const maxChunkCount = Math.max(...data.map(item => item.chunk_count || 0), 10);
 
     const handleEditClick = (item) => {
         setEditingItem(item);
@@ -76,87 +79,167 @@ const RelationshipView = () => {
 
     return (
         <div className="h-full w-full flex flex-col">
-            <div className="h-14 border-b border-gray-200 bg-white px-6 flex items-center justify-between sticky top-0 z-10 flex-shrink-0">
-                <h2 className="text-lg font-semibold text-gray-800">관계사전 (Relationship Dictionary)</h2>
-                <div className="text-sm text-gray-500">
-                    {data.length} 개 관계 유형
-                </div>
-            </div>
+            {/* Main Content Area */}
+            <div className="flex-1 flex overflow-hidden">
+                {/* Left Pane: Term List */}
+                <div className={`flex-1 border-r border-gray-200 flex flex-col bg-white transition-all duration-300 ease-in-out`}>
+                    <div className="h-14 border-b border-gray-200 bg-white px-6 flex items-center justify-between sticky top-0 z-10 flex-shrink-0">
+                        <h2 className="text-lg font-semibold text-gray-800">관계사전 (Relationship Dictionary)</h2>
+                        <div className="text-sm text-gray-500">
+                            {data.length} 개 관계 유형
+                        </div>
+                    </div>
 
-            <div className="flex-1 overflow-auto bg-white">
-                <div className="sticky top-0 z-20 bg-white border-b border-gray-200 p-2">
-                    <div className="relative max-w-sm">
-                        <input
-                            type="text"
-                            placeholder="관계 검색 (용어, 설명)..."
-                            value={listSearchTerm}
-                            onChange={(e) => setListSearchTerm(e.target.value)}
-                            className="w-full border border-gray-300 rounded px-3 py-2 pl-9 text-sm focus:border-primary focus:outline-none"
-                        />
-                        <Search className="absolute left-3 top-2.5 text-gray-400" size={14} />
+                    <div className="flex-1 overflow-auto bg-white">
+                        <div className="sticky top-0 z-20 bg-white border-b border-gray-200 px-4 flex items-center min-h-[48px] gap-2">
+                            <div className="relative flex-1 max-w-sm">
+                                <input
+                                    type="text"
+                                    placeholder="관계 검색 (용어, 설명)..."
+                                    value={listSearchTerm}
+                                    onChange={(e) => setListSearchTerm(e.target.value)}
+                                    className="w-full border border-gray-300 rounded px-3 py-1.5 pl-9 text-sm focus:border-primary focus:outline-none"
+                                />
+                                <Search className="absolute left-3 top-2 text-gray-400" size={14} />
+                            </div>
+                            {!isDetailOpen && selectedTerm && (
+                                <button
+                                    onClick={() => setIsDetailOpen(true)}
+                                    className="p-1.5 rounded hover:bg-gray-100 text-gray-500 transition-colors ml-auto"
+                                    title="상세정보 펼치기"
+                                >
+                                    <ChevronLeft size={18} />
+                                </button>
+                            )}
+                        </div>
+                        <table className="w-full text-left text-sm text-gray-700 table-fixed">
+                            <thead className="bg-gray-50 text-xs text-gray-500 font-medium sticky top-[53px] z-10 border-b border-gray-200">
+                                <tr>
+                                    <th className="px-6 py-3 font-normal w-[20%]">용어</th>
+                                    <th className="px-6 py-3 font-normal w-[40%]">설명</th>
+                                    <th className="px-6 py-3 font-normal w-[12%] text-center">청크 수</th>
+                                    <th className="px-6 py-3 font-normal w-[10%] text-center">관리</th>
+                                </tr>
+                            </thead>
+                            <tbody className="divide-y divide-gray-100">
+                                {filteredData.map((item, index) => (
+                                    <tr
+                                        key={index}
+                                        className={classNames(
+                                            "hover:bg-gray-50 transition-colors group cursor-pointer",
+                                            selectedTerm?.term_kr === item.term_kr ? "bg-blue-50" : ""
+                                        )}
+                                        onClick={() => {
+                                            setSelectedTerm(item);
+                                            setIsDetailOpen(true);
+                                        }}
+                                    >
+                                        <td className="px-6 py-2 align-top text-gray-900 break-words">
+                                            <div className="font-bold text-sm">{item.term_kr}</div>
+                                            <div className="text-xs text-gray-500">{item.term_en}</div>
+                                        </td>
+                                        <td className="px-6 py-2 align-top text-gray-600 leading-relaxed text-xs">
+                                            <p className="line-clamp-2" title={item.description}>{item.description}</p>
+                                        </td>
+                                        <td className="px-6 py-2 align-middle text-center">
+                                            <span className="text-sm text-gray-600 font-medium">
+                                                {item.chunk_count || 0}
+                                            </span>
+                                        </td>
+                                        <td className="px-6 py-2 align-middle text-center">
+                                            <div className="flex items-center justify-center gap-2 text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity">
+                                                <button
+                                                    onClick={(e) => { e.stopPropagation(); handleEditClick(item); }}
+                                                    className="p-1 hover:bg-gray-200 rounded text-gray-600 transition-colors"
+                                                    title="수정"
+                                                >
+                                                    <Pencil size={14} />
+                                                </button>
+                                                <button
+                                                    onClick={(e) => { e.stopPropagation(); handleMergeClick(item); }}
+                                                    className="p-1 hover:bg-gray-200 rounded text-gray-600 transition-colors"
+                                                    title="병합(이동)"
+                                                >
+                                                    <GitMerge size={14} />
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
                     </div>
                 </div>
-                <table className="w-full text-left text-sm text-gray-700 table-fixed">
-                    <thead className="bg-gray-50 text-xs text-gray-500 font-medium sticky top-[53px] z-10 border-b border-gray-200">
-                        <tr>
-                            <th className="px-6 py-3 font-normal w-[20%]">용어(KR)</th>
-                            <th className="px-6 py-3 font-normal w-[20%]">용어(EN)</th>
-                            <th className="px-6 py-3 font-normal w-[35%]">설명</th>
-                            <th className="px-6 py-3 font-normal w-[15%]">청크 수</th>
-                            <th className="px-6 py-3 font-normal w-[10%] text-center">관리</th>
-                        </tr>
-                    </thead>
-                    <tbody className="divide-y divide-gray-100">
-                        {filteredData.map((item, index) => (
-                            <tr key={index} className="hover:bg-gray-50 transition-colors group">
-                                <td className="px-6 py-4 align-top font-bold text-gray-900 break-words">
-                                    {item.term_kr}
-                                </td>
-                                <td className="px-6 py-4 align-top text-gray-600 break-words">
-                                    {item.term_en}
-                                </td>
-                                <td className="px-6 py-4 align-top text-gray-600 leading-relaxed text-xs">
-                                    <p className="line-clamp-2" title={item.description}>{item.description}</p>
-                                </td>
-                                <td className="px-6 py-4 align-middle">
-                                    <div className="flex items-center gap-2">
-                                        <div className="flex-1 h-2 bg-gray-100 rounded-full overflow-hidden">
-                                            <div
-                                                className="h-full bg-blue-400 rounded-full"
-                                                style={{ width: `${(item.chunk_count / maxChunkCount) * 100}%` }}
-                                            ></div>
-                                        </div>
-                                        <span className="text-xs text-gray-500 w-4 text-right">{item.chunk_count || 0}</span>
-                                    </div>
-                                </td>
-                                <td className="px-6 py-4 align-middle text-center">
-                                    <div className="flex items-center justify-center gap-2 text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity">
-                                        <button
-                                            onClick={() => handleEditClick(item)}
-                                            className="p-1 hover:bg-gray-200 rounded text-gray-600 transition-colors"
-                                            title="수정"
-                                        >
-                                            <Pencil size={14} />
-                                        </button>
-                                        <button
-                                            onClick={() => handleMergeClick(item)}
-                                            className="p-1 hover:bg-gray-200 rounded text-gray-600 transition-colors"
-                                            title="병합(이동)"
-                                        >
-                                            <GitMerge size={14} />
-                                        </button>
-                                        <button
-                                            className="p-1 hover:bg-gray-200 rounded text-gray-600 transition-colors"
-                                            title="추가"
-                                        >
-                                            <PlusCircle size={14} />
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
+
+                {/* Right Pane: Tabs and Content */}
+                <div className={classNames(
+                    "flex flex-col bg-gray-50 transition-all duration-300 ease-in-out border-l border-gray-200 overflow-hidden shrink-0",
+                    isDetailOpen ? "w-1/3 opacity-100" : "w-0 opacity-0"
+                )}>
+                    {selectedTerm ? (
+                        <>
+                            {/* Tab Header */}
+                            <div className="flex items-center justify-between border-b border-gray-200 bg-white h-14 flex-shrink-0">
+                                <div className="flex h-full">
+                                    <button
+                                        onClick={() => setActiveTab('doc')}
+                                        className={classNames(
+                                            "px-4 h-full flex items-center gap-2 text-sm font-medium transition-colors border-b-2",
+                                            activeTab === 'doc'
+                                                ? "border-blue-500 text-blue-600 bg-blue-50/50"
+                                                : "border-transparent text-gray-500 hover:text-gray-700 hover:bg-gray-50"
+                                        )}
+                                    >
+                                        <FileText size={16} />
+                                        문서
+                                    </button>
+                                    <button
+                                        onClick={() => setActiveTab('graph')}
+                                        className={classNames(
+                                            "px-4 h-full flex items-center gap-2 text-sm font-medium transition-colors border-b-2",
+                                            activeTab === 'graph'
+                                                ? "border-blue-500 text-blue-600 bg-blue-50/50"
+                                                : "border-transparent text-gray-500 hover:text-gray-700 hover:bg-gray-50"
+                                        )}
+                                    >
+                                        <Network size={16} />
+                                        그래프
+                                    </button>
+                                </div>
+                                <button
+                                    onClick={() => setIsDetailOpen(false)}
+                                    className="p-3 text-gray-400 hover:text-gray-600 hover:bg-gray-50 transition-colors"
+                                    title="상세정보 접기"
+                                >
+                                    <ChevronRight size={18} />
+                                </button>
+                            </div>
+
+                            {/* Content */}
+                            <div className="flex-1 overflow-hidden relative">
+                                {activeTab === 'doc' ? (
+                                    <ChunkViewer
+                                        selectedTerm={selectedTerm}
+                                        onClose={() => setIsDetailOpen(false)}
+                                        mode="embedded"
+                                    />
+                                ) : (
+                                    knTypeData && (
+                                        <GraphVisualizer
+                                            data={knTypeData}
+                                            centerNode={selectedTerm.term_kr}
+                                        />
+                                    )
+                                )}
+                            </div>
+                        </>
+                    ) : (
+                        <div className="h-full flex flex-col items-center justify-center text-gray-400">
+                            <p className="text-lg font-medium text-gray-500">용어를 선택하세요</p>
+                            <p className="text-sm text-gray-400 mt-2">좌측 목록에서 용어를 선택하면 상세 정보를 볼 수 있습니다.</p>
+                        </div>
+                    )}
+                </div>
             </div>
 
             {/* Edit Modal Mockup */}
@@ -203,8 +286,8 @@ const RelationshipView = () => {
                                     <input
                                         type="text"
                                         placeholder="대상 검색..."
-                                        value={searchTerm}
-                                        onChange={(e) => setSearchTerm(e.target.value)}
+                                        value={mergeSearchTerm}
+                                        onChange={(e) => setMergeSearchTerm(e.target.value)}
                                         className="w-full border border-gray-300 rounded px-3 py-2 pl-9 text-sm focus:border-primary focus:outline-none"
                                     />
                                     <Search className="absolute left-3 top-2.5 text-gray-400" size={14} />
@@ -243,5 +326,6 @@ const RelationshipView = () => {
         </div>
     );
 };
+
 
 export default RelationshipView;

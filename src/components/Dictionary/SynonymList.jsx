@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
-import { Pencil, PlusCircle, Trash2, ArrowRight, GitMerge, Search } from 'lucide-react';
+import { Pencil, PlusCircle, Trash2, ArrowRight, GitMerge, Search, ChevronLeft } from 'lucide-react';
 import useStore from '../../store/useStore';
 
-const SynonymList = ({ data, onChunkClick }) => {
+const SynonymList = (props) => {
+    const { data, onChunkClick, showExpandButton, onExpand } = props;
     const { dictionaryData } = useStore(); // Access full data for merge targets
+    const mergedProps = props;
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [isMergeModalOpen, setIsMergeModalOpen] = useState(false);
     const [editingItem, setEditingItem] = useState(null);
@@ -19,7 +21,7 @@ const SynonymList = ({ data, onChunkClick }) => {
         (item.description && item.description.toLowerCase().includes(listSearchTerm.toLowerCase()))
     );
 
-    const maxChunkCount = Math.max(...data.map(item => item.chunk_count || 0), 10);
+    const maxChunkCount = 200;
 
     const handleEditClick = (item) => {
         setEditingItem(item);
@@ -64,81 +66,78 @@ const SynonymList = ({ data, onChunkClick }) => {
     return (
         <>
             <div className="flex-1 overflow-auto bg-white">
-                <div className="sticky top-0 z-20 bg-white border-b border-gray-200 p-2">
-                    <div className="relative max-w-sm">
+                <div className="sticky top-0 z-20 bg-white border-b border-gray-200 px-4 flex items-center min-h-[48px] gap-2">
+                    <div className="relative flex-1 max-w-sm">
                         <input
                             type="text"
                             placeholder="개념 검색 (용어, 설명)..."
                             value={listSearchTerm}
                             onChange={(e) => setListSearchTerm(e.target.value)}
-                            className="w-full border border-gray-300 rounded px-3 py-2 pl-9 text-sm focus:border-primary focus:outline-none"
+                            className="w-full border border-gray-300 rounded px-3 py-1.5 pl-9 text-sm focus:border-primary focus:outline-none"
                         />
-                        <Search className="absolute left-3 top-2.5 text-gray-400" size={14} />
+                        <Search className="absolute left-3 top-2 text-gray-400" size={14} />
                     </div>
+                    {showExpandButton && (
+                        <button
+                            onClick={onExpand}
+                            className="p-1.5 rounded hover:bg-gray-100 text-gray-500 transition-colors ml-auto"
+                            title="상세정보 펼치기"
+                        >
+                            <ChevronLeft size={18} />
+                        </button>
+                    )}
                 </div>
                 <table className="w-full text-left text-sm text-gray-700 table-fixed">
                     <thead className="bg-gray-50 text-xs text-gray-500 font-medium sticky top-[53px] z-10 border-b border-gray-200">
                         <tr>
-                            <th className="px-6 py-3 font-normal w-[15%]">용어(KR)</th>
-                            <th className="px-6 py-3 font-normal w-[15%]">용어(EN)</th>
-                            <th className="px-6 py-3 font-normal w-[30%]">설명</th>
-                            <th className="px-6 py-3 font-normal w-[20%]">유의어</th>
-                            <th className="px-6 py-3 font-normal w-[10%]">청크 수</th>
+                            <th className="px-6 py-3 font-normal w-[18%]">용어</th>
+                            <th className="px-6 py-3 font-normal w-[20%]">설명</th>
+                            <th className="px-6 py-3 font-normal w-[40%]">유의어</th>
+                            <th className="px-6 py-3 font-normal w-[12%] text-center">청크 수</th>
                             <th className="px-6 py-3 font-normal w-[10%] text-center">관리</th>
                         </tr>
                     </thead>
 
                     <tbody className="divide-y divide-gray-100">
                         {filteredData.map((item, index) => (
-                            <tr key={index} className="hover:bg-gray-50 transition-colors group">
-                                <td className="px-6 py-4 align-top font-bold text-gray-900 break-words">
-                                    {item.term_kr}
+                            <tr
+                                key={index}
+                                className={`hover:bg-blue-50 transition-colors group cursor-pointer ${(item.term_kr === (mergedProps.selectedTerm?.term_kr) && item.term_en === (mergedProps.selectedTerm?.term_en)) ? 'bg-blue-50' : ''
+                                    }`}
+                                onClick={() => mergedProps.onTermSelect && mergedProps.onTermSelect(item)}
+                            >
+                                <td className="px-6 py-2 align-top text-gray-900 break-words">
+                                    <div className="font-bold text-sm">{item.term_kr}</div>
+                                    <div className="text-xs text-gray-500">{item.term_en}</div>
                                 </td>
-                                <td className="px-6 py-4 align-top text-gray-600 break-words">
-                                    {item.term_en}
-                                </td>
-                                <td className="px-6 py-4 align-top text-gray-600 leading-relaxed text-xs">
+                                <td className="px-6 py-2 align-top text-gray-600 leading-relaxed text-xs">
                                     <p className="line-clamp-2" title={item.description}>{item.description}</p>
                                 </td>
-                                <td className="px-6 py-4 align-top">
+                                <td className="px-6 py-2 align-top">
                                     <div className="text-gray-400 italic text-xs break-words">
                                         {item.synonyms?.join(', ')}
                                     </div>
                                 </td>
-                                <td className="px-6 py-4 align-middle">
-                                    <div className="flex items-center gap-2 cursor-pointer" onClick={() => onChunkClick(item)}>
-                                        <div className="flex-1 h-2 bg-gray-100 rounded-full overflow-hidden">
-                                            <div
-                                                className="h-full bg-blue-400 rounded-full"
-                                                style={{ width: `${(item.chunk_count / maxChunkCount) * 100}%` }}
-                                            ></div>
-                                        </div>
-                                        <span className="text-xs text-gray-500 w-4 text-right hover:text-blue-600 font-medium transition-colors">
-                                            {item.chunk_count || 0}
-                                        </span>
-                                    </div>
+                                <td className="px-6 py-2 align-middle text-center">
+                                    <span className="text-sm text-gray-600 font-medium">
+                                        {item.chunk_count || 0}
+                                    </span>
                                 </td>
-                                <td className="px-6 py-4 align-middle text-center">
+                                <td className="px-6 py-2 align-middle text-center">
                                     <div className="flex items-center justify-center gap-2 text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity">
                                         <button
-                                            onClick={() => handleEditClick(item)}
+                                            onClick={(e) => { e.stopPropagation(); handleEditClick(item); }}
                                             className="p-1 hover:bg-gray-200 rounded text-gray-600 transition-colors"
                                             title="수정"
                                         >
                                             <Pencil size={14} />
                                         </button>
                                         <button
-                                            onClick={() => handleMergeClick(item)}
+                                            onClick={(e) => { e.stopPropagation(); handleMergeClick(item); }}
                                             className="p-1 hover:bg-gray-200 rounded text-gray-600 transition-colors"
                                             title="개념 이동(병합)"
                                         >
                                             <GitMerge size={14} />
-                                        </button>
-                                        <button
-                                            className="p-1 hover:bg-gray-200 rounded text-gray-600 transition-colors"
-                                            title="추가"
-                                        >
-                                            <PlusCircle size={14} />
                                         </button>
                                     </div>
                                 </td>
