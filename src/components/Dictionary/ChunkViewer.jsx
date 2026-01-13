@@ -1,8 +1,11 @@
 import React from 'react';
 import { X, FileText, ChevronRight } from 'lucide-react';
 
-const ChunkViewer = ({ isOpen, onClose, data }) => {
-    if (!isOpen) return null;
+const ChunkViewer = ({ selectedTerm, onClose }) => {
+    // If selectedTerm is provided, it's considered open
+    if (!selectedTerm) return null;
+
+    const data = selectedTerm;
 
     return (
         <div className="absolute top-0 right-0 h-full w-[450px] bg-gray-50 shadow-2xl border-l border-gray-200 transform transition-transform duration-300 ease-in-out z-50 flex flex-col">

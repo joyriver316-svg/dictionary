@@ -9,9 +9,17 @@ const RelationshipView = () => {
     const [isMergeModalOpen, setIsMergeModalOpen] = useState(false);
     const [editingItem, setEditingItem] = useState(null);
     const [mergingItem, setMergingItem] = useState(null);
-    const [searchTerm, setSearchTerm] = useState("");
+    const [mergeSearchTerm, setMergeSearchTerm] = useState("");
+    const [listSearchTerm, setListSearchTerm] = useState("");
 
     const data = relationshipDictionary || [];
+
+    // Filter displayed data based on list search term
+    const filteredData = data.filter(item =>
+        item.term_kr.toLowerCase().includes(listSearchTerm.toLowerCase()) ||
+        item.term_en.toLowerCase().includes(listSearchTerm.toLowerCase()) ||
+        (item.description && item.description.toLowerCase().includes(listSearchTerm.toLowerCase()))
+    );
 
     // Determine max chunk count for relative bar width
     const maxChunkCount = Math.max(...data.map(item => item.chunk_count || 0), 10);
@@ -24,7 +32,7 @@ const RelationshipView = () => {
     const handleMergeClick = (item) => {
         setMergingItem(item);
         setIsMergeModalOpen(true);
-        setSearchTerm("");
+        setMergeSearchTerm("");
     };
 
     const closeEditModal = () => {
@@ -42,17 +50,26 @@ const RelationshipView = () => {
 
     if (!activeCategoryId) {
         return (
-            <div className="h-full flex items-center justify-center text-gray-400">
-                <p>좌측 메뉴에서 카테고리를 선택하세요</p>
+            <div className="h-full flex flex-col p-6">
+                <div className="flex-1 bg-white rounded-lg shadow-sm border border-gray-200 flex items-center justify-center">
+                    <div className="text-center">
+                        <p className="text-gray-400 text-lg font-medium">좌측 메뉴에서 카테고리를 선택하세요</p>
+                    </div>
+                </div>
             </div>
         );
     }
 
     if (data.length === 0) {
         return (
-            <div className="h-full flex flex-col items-center justify-center text-gray-400 gap-2">
-                <Network size={48} className="opacity-20" />
-                <p>이 카테고리에는 관계 정의 데이터가 없습니다.</p>
+            <div className="h-full w-full">
+                <div className="h-14 border-b border-gray-200 bg-white px-6 flex items-center justify-between sticky top-0 z-10 flex-shrink-0">
+                    <h2 className="text-lg font-semibold text-gray-800">관계사전 (Relationship Dictionary)</h2>
+                </div>
+                <div className="flex-1 h-[calc(100%-3.5rem)] flex flex-col items-center justify-center text-gray-400 gap-2">
+                    <Network size={48} className="opacity-20" />
+                    <p>이 카테고리에는 관계 정의 데이터가 없습니다.</p>
+                </div>
             </div>
         );
     }
@@ -67,8 +84,20 @@ const RelationshipView = () => {
             </div>
 
             <div className="flex-1 overflow-auto bg-white">
+                <div className="sticky top-0 z-20 bg-white border-b border-gray-200 p-2">
+                    <div className="relative max-w-sm">
+                        <input
+                            type="text"
+                            placeholder="관계 검색 (용어, 설명)..."
+                            value={listSearchTerm}
+                            onChange={(e) => setListSearchTerm(e.target.value)}
+                            className="w-full border border-gray-300 rounded px-3 py-2 pl-9 text-sm focus:border-primary focus:outline-none"
+                        />
+                        <Search className="absolute left-3 top-2.5 text-gray-400" size={14} />
+                    </div>
+                </div>
                 <table className="w-full text-left text-sm text-gray-700 table-fixed">
-                    <thead className="bg-gray-50 text-xs text-gray-500 font-medium sticky top-0 z-10 border-b border-gray-200">
+                    <thead className="bg-gray-50 text-xs text-gray-500 font-medium sticky top-[53px] z-10 border-b border-gray-200">
                         <tr>
                             <th className="px-6 py-3 font-normal w-[20%]">용어(KR)</th>
                             <th className="px-6 py-3 font-normal w-[20%]">용어(EN)</th>
@@ -78,7 +107,7 @@ const RelationshipView = () => {
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-100">
-                        {data.map((item, index) => (
+                        {filteredData.map((item, index) => (
                             <tr key={index} className="hover:bg-gray-50 transition-colors group">
                                 <td className="px-6 py-4 align-top font-bold text-gray-900 break-words">
                                     {item.term_kr}
