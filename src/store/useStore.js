@@ -94,10 +94,33 @@ const useStore = create((set, get) => ({
         if (!categoryId) return;
 
         // Simulate data fetching from mock
-        const dictData = mockData.data_structure.dictionary[categoryId] || [];
+        // Simulate data fetching from mock
+        let dictData = mockData.data_structure.dictionary[categoryId] || [];
         const relData = mockData.data_structure.relations[categoryId] || [];
-        const relDict = mockData.data_structure.relationship_dictionary || [];
-        const knData = mockData.data_structure.kn_type_data ? (mockData.data_structure.kn_type_data[categoryId] || []) : [];
+        let relDict = mockData.data_structure.relationship_dictionary || [];
+        let knData = mockData.data_structure.kn_type_data ? (mockData.data_structure.kn_type_data[categoryId] || []) : [];
+
+        // Helper to inflate data for UI visualization (Mockup purposes)
+        const inflateData = (data, prefix) => {
+            if (data.length > 0 && data.length < 60) {
+                const inflated = [...data];
+                while (inflated.length < 60) {
+                    inflated.push(...data.map((item, idx) => ({
+                        ...item,
+                        id: `${prefix}_${inflated.length + idx}`, // Ensure unique ID if needed
+                        // Append numbering to text fields to distinguish visually
+                        term_kr: item.term_kr ? `${item.term_kr} ${inflated.length + idx + 1}` : undefined,
+                        subject: item.subject ? `${item.subject} ${inflated.length + idx + 1}` : undefined
+                    })));
+                }
+                return inflated.slice(0, 60);
+            }
+            return data;
+        };
+
+        dictData = inflateData(dictData, 'dict');
+        relDict = inflateData(relDict, 'rel');
+        knData = inflateData(knData, 'kn');
 
         set({
             dictionaryData: dictData,
@@ -109,7 +132,7 @@ const useStore = create((set, get) => ({
 
     // Auth Actions
     login: (id, password) => {
-        const user = get().users.find(u => u.id === id && u.password === password);
+        const user = get().users.find(u => u.id.toLowerCase() === id.toLowerCase() && u.password === password);
         if (user) {
             set({ isAuthenticated: true, currentUser: user });
             return true;

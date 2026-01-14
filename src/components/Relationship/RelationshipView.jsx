@@ -27,6 +27,15 @@ const RelationshipView = () => {
         (item.description && item.description.toLowerCase().includes(listSearchTerm.toLowerCase()))
     );
 
+    // Pagination Logic
+    const [currentPage, setCurrentPage] = useState(1);
+    const ITEMS_PER_PAGE = 24;
+    const totalPages = Math.ceil(filteredData.length / ITEMS_PER_PAGE);
+    const paginatedData = filteredData.slice(
+        (currentPage - 1) * ITEMS_PER_PAGE,
+        currentPage * ITEMS_PER_PAGE
+    );
+
     const handleEditClick = (item) => {
         setEditingItem(item);
         setIsEditModalOpen(true);
@@ -90,14 +99,17 @@ const RelationshipView = () => {
                         </div>
                     </div>
 
-                    <div className="flex-1 overflow-auto bg-white">
-                        <div className="sticky top-0 z-20 bg-white border-b border-gray-200 px-4 flex items-center min-h-[48px] gap-2">
+                    <div className="flex-1 overflow-auto bg-white flex flex-col">
+                        <div className="sticky top-0 z-20 bg-white border-b border-gray-200 px-4 flex items-center min-h-[48px] gap-2 shrink-0">
                             <div className="relative flex-1 max-w-sm">
                                 <input
                                     type="text"
                                     placeholder="관계 검색 (용어, 설명)..."
                                     value={listSearchTerm}
-                                    onChange={(e) => setListSearchTerm(e.target.value)}
+                                    onChange={(e) => {
+                                        setListSearchTerm(e.target.value);
+                                        setCurrentPage(1);
+                                    }}
                                     className="w-full border border-gray-300 rounded px-3 py-1.5 pl-9 text-sm focus:border-primary focus:outline-none"
                                 />
                                 <Search className="absolute left-3 top-2 text-gray-400" size={14} />
@@ -112,62 +124,101 @@ const RelationshipView = () => {
                                 </button>
                             )}
                         </div>
-                        <table className="w-full text-left text-sm text-gray-700 table-fixed">
-                            <thead className="bg-gray-50 text-xs text-gray-500 font-medium sticky top-[53px] z-10 border-b border-gray-200">
-                                <tr>
-                                    <th className="px-6 py-3 font-normal w-[20%]">용어</th>
-                                    <th className="px-6 py-3 font-normal w-[40%]">설명</th>
-                                    <th className="px-6 py-3 font-normal w-[12%] text-center">청크 수</th>
-                                    <th className="px-6 py-3 font-normal w-[10%] text-center">관리</th>
-                                </tr>
-                            </thead>
-                            <tbody className="divide-y divide-gray-100">
-                                {filteredData.map((item, index) => (
-                                    <tr
-                                        key={index}
-                                        className={classNames(
-                                            "hover:bg-gray-50 transition-colors group cursor-pointer",
-                                            selectedTerm?.term_kr === item.term_kr ? "bg-blue-50" : ""
-                                        )}
-                                        onClick={() => {
-                                            setSelectedTerm(item);
-                                            setIsDetailOpen(true);
-                                        }}
-                                    >
-                                        <td className="px-6 py-2 align-top text-gray-900 break-words">
-                                            <div className="font-bold text-sm">{item.term_kr}</div>
-                                            <div className="text-xs text-gray-500">{item.term_en}</div>
-                                        </td>
-                                        <td className="px-6 py-2 align-top text-gray-600 leading-relaxed text-xs">
-                                            <p className="line-clamp-2" title={item.description}>{item.description}</p>
-                                        </td>
-                                        <td className="px-6 py-2 align-middle text-center">
-                                            <span className="text-sm text-gray-600 font-medium">
-                                                {item.chunk_count || 0}
-                                            </span>
-                                        </td>
-                                        <td className="px-6 py-2 align-middle text-center">
-                                            <div className="flex items-center justify-center gap-2 text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity">
-                                                <button
-                                                    onClick={(e) => { e.stopPropagation(); handleEditClick(item); }}
-                                                    className="p-1 hover:bg-gray-200 rounded text-gray-600 transition-colors"
-                                                    title="수정"
-                                                >
-                                                    <Pencil size={14} />
-                                                </button>
-                                                <button
-                                                    onClick={(e) => { e.stopPropagation(); handleMergeClick(item); }}
-                                                    className="p-1 hover:bg-gray-200 rounded text-gray-600 transition-colors"
-                                                    title="병합(이동)"
-                                                >
-                                                    <GitMerge size={14} />
-                                                </button>
-                                            </div>
-                                        </td>
+
+                        <div className="flex-1 overflow-auto">
+                            <table className="w-full text-left text-sm text-gray-700 table-fixed">
+                                <thead className="bg-gray-50 text-xs text-gray-500 font-medium sticky top-0 z-10 border-b border-gray-200">
+                                    <tr>
+                                        <th className="px-4 py-2 font-normal w-[20%]">용어</th>
+                                        <th className="px-4 py-2 font-normal w-[40%]">설명</th>
+                                        <th className="px-4 py-2 font-normal w-[12%] text-center">청크 수</th>
+                                        <th className="px-4 py-2 font-normal w-[10%] text-center">관리</th>
                                     </tr>
-                                ))}
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody className="divide-y divide-gray-100">
+                                    {paginatedData.map((item, index) => (
+                                        <tr
+                                            key={index}
+                                            className={classNames(
+                                                "hover:bg-gray-50 transition-colors group cursor-pointer h-10",
+                                                selectedTerm?.term_kr === item.term_kr ? "bg-blue-50" : ""
+                                            )}
+                                            onClick={() => {
+                                                setSelectedTerm(item);
+                                                setIsDetailOpen(true);
+                                            }}
+                                        >
+                                            <td className="px-4 py-1 align-middle text-gray-900 truncate">
+                                                <div className="flex items-center gap-1">
+                                                    <span className="font-bold text-sm truncate" title={item.term_kr}>{item.term_kr}</span>
+                                                    <span className="text-xs text-gray-400 truncate hidden xl:inline" title={item.term_en}>({item.term_en})</span>
+                                                </div>
+                                            </td>
+                                            <td className="px-4 py-1 align-middle text-gray-600 text-xs">
+                                                <p className="truncate" title={item.description}>{item.description}</p>
+                                            </td>
+                                            <td className="px-4 py-1 align-middle text-center">
+                                                <span className="text-sm text-gray-600 font-medium">
+                                                    {item.chunk_count || 0}
+                                                </span>
+                                            </td>
+                                            <td className="px-4 py-1 align-middle text-center">
+                                                <div className="flex items-center justify-center gap-1 text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity">
+                                                    <button
+                                                        onClick={(e) => { e.stopPropagation(); handleEditClick(item); }}
+                                                        className="p-1 hover:bg-gray-200 rounded text-gray-600 transition-colors"
+                                                        title="수정"
+                                                    >
+                                                        <Pencil size={12} />
+                                                    </button>
+                                                    <button
+                                                        onClick={(e) => { e.stopPropagation(); handleMergeClick(item); }}
+                                                        className="p-1 hover:bg-gray-200 rounded text-gray-600 transition-colors"
+                                                        title="병합(이동)"
+                                                    >
+                                                        <GitMerge size={12} />
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+
+                        {/* Pagination Controls */}
+                        {totalPages > 1 && (
+                            <div className="flex items-center justify-center gap-1 py-2 border-t border-gray-200 bg-gray-50 shrink-0">
+                                <button
+                                    onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                                    disabled={currentPage === 1}
+                                    className="p-1 rounded hover:bg-gray-200 disabled:opacity-30 disabled:hover:bg-transparent"
+                                >
+                                    <ChevronLeft size={16} />
+                                </button>
+                                <div className="flex gap-1">
+                                    {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
+                                        <button
+                                            key={page}
+                                            onClick={() => setCurrentPage(page)}
+                                            className={`w-6 h-6 flex items-center justify-center rounded text-xs font-medium transition-colors ${currentPage === page
+                                                ? 'bg-blue-500 text-white'
+                                                : 'text-gray-600 hover:bg-gray-200'
+                                                }`}
+                                        >
+                                            {page}
+                                        </button>
+                                    ))}
+                                </div>
+                                <button
+                                    onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                                    disabled={currentPage === totalPages}
+                                    className="p-1 rounded hover:bg-gray-200 disabled:opacity-30 disabled:hover:bg-transparent rotate-180"
+                                >
+                                    <ChevronLeft size={16} />
+                                </button>
+                            </div>
+                        )}
                     </div>
                 </div>
 

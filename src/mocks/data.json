@@ -32,14 +32,19 @@
                     "chunk_count": 8,
                     "chunks": [
                         {
-                            "id": "chk1",
-                            "source": "Standard Criteria for Skin Types_v2.pdf",
-                            "content": "색소 침착 정도는 멜라닌 생성과 분포에 따라 결정되며, 피부 톤과 얼룩덜룩함을 평가하는 중요한 지표입니다."
+                            "id": "chk_ind_1",
+                            "source": "피부 분석 표준 가이드",
+                            "content": "색소 침착 정도에 따라 피부 톤의 균일성을 판단한다."
                         },
                         {
-                            "id": "chk2",
-                            "source": "Standard Criteria for Skin Types_v2.pdf",
-                            "content": "자외선 노출로 인한 색소 침착은 피부 노화의 주요 징후 중 하나로 간주됩니다."
+                            "id": "chk_ind_2",
+                            "source": "피부 분석 표준 가이드",
+                            "content": "멜라닌 지수는 색소도의 주요 척도이다."
+                        },
+                        {
+                            "id": "chk_ind_3",
+                            "source": "임상 피부학",
+                            "content": "자외선 노출에 의한 색소 변화를 정량적으로 측정한다."
                         }
                     ]
                 },
@@ -53,25 +58,202 @@
                     "chunk_count": 5,
                     "chunks": [
                         {
-                            "id": "chk3",
-                            "content": "피부 탄력도는 진피층의 콜라겐과 엘라스틴 섬유의 상태에 따라 좌우됩니다."
+                            "id": "chk_elas_1",
+                            "source": "노화 방지 연구 논문",
+                            "content": "탄력도는 진피층의 콜라겐과 엘라스틴의 상태를 반영한다."
                         }
                     ]
                 },
                 {
                     "term_kr": "유수분도",
                     "term_en": "Oil and moisture levels",
-                    "description": "피부 유형을 분류하는 척도요인 중 가장 우선순위가 높은 요인 (종합중요도 0.585)입니다.",
+                    "description": "피부 유형을 분류하는 척도요인 중 가장 우선순위가 높은 요인입니다.",
                     "synonyms": [
                         "Oilandmoisturelevels"
                     ],
                     "chunk_count": 12,
                     "chunks": [
                         {
-                            "id": "chk4",
-                            "content": "유수분 밸런스는 건강한 피부 장벽 유지의 핵심이며, 깨질 경우 트러블이나 건조함을 유발합니다."
+                            "id": "chk_oil_1",
+                            "source": "화장품 성분학",
+                            "content": "유분과 수분의 밸런스는 피부 장벽 기능에 결정적인 역할을 한다."
+                        },
+                        {
+                            "id": "chk_oil_2",
+                            "source": "피부과학 개론 4판",
+                            "content": "T존과 U존의 유수분 차이를 고려해야 한다."
                         }
                     ]
+                },
+                {
+                    "term_kr": "주름 정도",
+                    "term_en": "Wrinkle level",
+                    "description": "피부 노화의 척도로, 주름의 깊이와 분포를 나타냅니다.",
+                    "synonyms": [
+                        "Wrinkles"
+                    ],
+                    "chunk_count": 6,
+                    "chunks": []
+                },
+                {
+                    "term_kr": "모공 크기",
+                    "term_en": "Pore size",
+                    "description": "피지 분비와 관련된 모공의 확장 정도입니다.",
+                    "synonyms": [
+                        "Pores"
+                    ],
+                    "chunk_count": 4,
+                    "chunks": []
+                },
+                {
+                    "term_kr": "피부 톤",
+                    "term_en": "Skin tone",
+                    "description": "피부의 밝기와 균일성을 나타내는 지표입니다.",
+                    "synonyms": [
+                        "Skintone"
+                    ],
+                    "chunk_count": 7,
+                    "chunks": []
+                },
+                {
+                    "term_kr": "민감도",
+                    "term_en": "Sensitivity",
+                    "description": "외부 자극에 대한 피부의 반응 정도입니다.",
+                    "synonyms": [
+                        "SkinSensitivity"
+                    ],
+                    "chunk_count": 9,
+                    "chunks": []
+                },
+                {
+                    "term_kr": "피지 분비량",
+                    "term_en": "Sebum secretion",
+                    "description": "피지선에서 분비되는 유분의 양입니다.",
+                    "synonyms": [
+                        "Sebum"
+                    ],
+                    "chunk_count": 5,
+                    "chunks": []
+                },
+                {
+                    "term_kr": "각질 정도",
+                    "term_en": "Keratin level",
+                    "description": "피부 표면의 각질 축적 상태를 나타냅니다.",
+                    "synonyms": [
+                        "DeadSkinCells"
+                    ],
+                    "chunk_count": 3,
+                    "chunks": []
+                },
+                {
+                    "term_kr": "수분 보유력",
+                    "term_en": "Moisture retention",
+                    "description": "피부가 수분을 머금고 유지하는 능력입니다.",
+                    "synonyms": [
+                        "Moisture"
+                    ],
+                    "chunk_count": 8,
+                    "chunks": []
+                },
+                {
+                    "term_kr": "홍조",
+                    "term_en": "Redness",
+                    "description": "혈관 확장 등으로 인한 피부의 붉은 정도입니다.",
+                    "synonyms": [
+                        "Flushing"
+                    ],
+                    "chunk_count": 4,
+                    "chunks": []
+                },
+                {
+                    "term_kr": "피부 결",
+                    "term_en": "Skin texture",
+                    "description": "피부 표면의 매끄러움과 거칠기를 나타냅니다.",
+                    "synonyms": [
+                        "Texture"
+                    ],
+                    "chunk_count": 6,
+                    "chunks": []
+                },
+                {
+                    "term_kr": "투명도",
+                    "term_en": "Transparency",
+                    "description": "피부의 맑고 투명한 정도를 나타냅니다.",
+                    "synonyms": [
+                        "Clarity"
+                    ],
+                    "chunk_count": 2,
+                    "chunks": []
+                },
+                {
+                    "term_kr": "유분 함량",
+                    "term_en": "Oil content",
+                    "description": "피부 표면에 존재하는 유분의 양입니다.",
+                    "synonyms": [
+                        "Oiliness"
+                    ],
+                    "chunk_count": 5,
+                    "chunks": []
+                },
+                {
+                    "term_kr": "콜라겐 밀도",
+                    "term_en": "Collagen density",
+                    "description": "진피층 내 콜라겐 섬유의 밀도입니다.",
+                    "synonyms": [
+                        "Collagen"
+                    ],
+                    "chunk_count": 7,
+                    "chunks": []
+                },
+                {
+                    "term_kr": "엘라스틴 상태",
+                    "term_en": "Elastin condition",
+                    "description": "피부 탄력에 관여하는 엘라스틴의 상태입니다.",
+                    "synonyms": [
+                        "Elastin"
+                    ],
+                    "chunk_count": 4,
+                    "chunks": []
+                },
+                {
+                    "term_kr": "멜라닌 지수",
+                    "term_en": "Melanin index",
+                    "description": "피부 내 멜라닌 색소의 양을 수치화한 것입니다.",
+                    "synonyms": [
+                        "Melanin"
+                    ],
+                    "chunk_count": 6,
+                    "chunks": []
+                },
+                {
+                    "term_kr": "피부 두께",
+                    "term_en": "Skin thickness",
+                    "description": "표피와 진피를 포함한 피부의 전체 두께입니다.",
+                    "synonyms": [
+                        "Thickness"
+                    ],
+                    "chunk_count": 3,
+                    "chunks": []
+                },
+                {
+                    "term_kr": "pH 농도",
+                    "term_en": "pH level",
+                    "description": "피부 표면의 산성도를 나타냅니다.",
+                    "synonyms": [
+                        "pH"
+                    ],
+                    "chunk_count": 5,
+                    "chunks": []
+                },
+                {
+                    "term_kr": "재생 능력",
+                    "term_en": "Regeneration ability",
+                    "description": "피부 상처나 손상 후 회복되는 능력입니다.",
+                    "synonyms": [
+                        "Recovery"
+                    ],
+                    "chunk_count": 8,
+                    "chunks": []
                 }
             ],
             "cat_concept": [
@@ -87,7 +269,13 @@
                     "chunks": [
                         {
                             "id": "chk5",
+                            "source": "바우만 피부 유형 가이드 v2.0",
                             "content": "바우만 피부 유형 분류법은 지성/건성, 민감성/저항성, 색소성/비색소성, 주름/탄력 4가지 지표를 조합하여 16가지 유형으로 나눕니다."
+                        },
+                        {
+                            "id": "chk5_2",
+                            "source": "피부과학 개론 4판",
+                            "content": "피부 타입을 정확히 분류하는 것은 맞춤형 화장품 처방의 기초가 된다."
                         }
                     ]
                 }
@@ -105,7 +293,13 @@
                     "chunks": [
                         {
                             "id": "chk6",
+                            "source": "환경과 피부 노화",
                             "content": "자외선, 미세먼지 등 환경적 요인은 활성산소를 발생시켜 피부 노화를 가속화합니다."
+                        },
+                        {
+                            "id": "chk6_2",
+                            "source": "현대인의 피부 건강 보고서",
+                            "content": "스트레스와 수면 부족은 후천적인 피부 트러블의 주요 원인 중 하나로 꼽힌다."
                         }
                     ]
                 }
@@ -130,7 +324,19 @@
                 "synonyms": [
                     "의가장결정적인기준이다"
                 ],
-                "chunk_count": 12
+                "chunk_count": 12,
+                "chunks": [
+                    {
+                        "id": "chk_rel_1",
+                        "source": "관계형 데이터 모델링",
+                        "content": "결정적 기준은 상위 개념과 하위 개념을 구분짓는 핵심 속성이다."
+                    },
+                    {
+                        "id": "chk_rel_2",
+                        "source": "온톨로지 구축 가이드",
+                        "content": "엔티티 간의 계층 구조를 정의할 때 사용된다."
+                    }
+                ]
             },
             {
                 "term_kr": "척도요인을 가지다",
@@ -139,7 +345,14 @@
                 "synonyms": [
                     "척도요인을가지다"
                 ],
-                "chunk_count": 8
+                "chunk_count": 8,
+                "chunks": [
+                    {
+                        "id": "chk_rel_3",
+                        "source": "피부 분류 체계 방법론",
+                        "content": "각 피부 유형은 고유한 척도 요인을 가진다."
+                    }
+                ]
             },
             {
                 "term_kr": "의 결정적 요인이다",
@@ -148,7 +361,14 @@
                 "synonyms": [
                     "의결정적요인이다"
                 ],
-                "chunk_count": 15
+                "chunk_count": 15,
+                "chunks": [
+                    {
+                        "id": "chk_rel_4",
+                        "source": "인과관계 분석",
+                        "content": "원인이 결과에 미치는 결정적 영향력을 설명한다."
+                    }
+                ]
             },
             {
                 "term_kr": "에 의해 영향받다",
@@ -164,8 +384,7 @@
                 "term_en": "is rich in",
                 "description": "한 대상이 다른 대상을 다량 포함하고 있음을 나타내는 관계.",
                 "synonyms": [
-                    "isrichin",
-                    "~이풍부하다"
+                    "isrichin"
                 ],
                 "chunk_count": 5
             },
@@ -183,8 +402,7 @@
                 "term_en": "is a type of",
                 "description": "한 대상이 다른 대상의 하위 분류에 속함을 나타내는 관계.",
                 "synonyms": [
-                    "isatypeof",
-                    "~의종류이다"
+                    "isatypeof"
                 ],
                 "chunk_count": 40
             },
@@ -193,10 +411,117 @@
                 "term_en": "is a symptom of",
                 "description": "특정 현상이 질병이나 상태의 증상임을 나타내는 관계.",
                 "synonyms": [
-                    "isasymptomof",
-                    "~의증상이다"
+                    "isasymptomof"
                 ],
                 "chunk_count": 18
+            },
+            {
+                "term_kr": "유발하다",
+                "term_en": "causes",
+                "description": "원인이 되어 어떤 결과를 가져오는 관계.",
+                "synonyms": [
+                    "brings_about"
+                ],
+                "chunk_count": 22
+            },
+            {
+                "term_kr": "감소시키다",
+                "term_en": "reduces",
+                "description": "수량이나 강도를 줄이는 관계.",
+                "synonyms": [
+                    "decreases"
+                ],
+                "chunk_count": 14
+            },
+            {
+                "term_kr": "증가시키다",
+                "term_en": "increases",
+                "description": "수량이나 강도를 늘리는 관계.",
+                "synonyms": [
+                    "boosts"
+                ],
+                "chunk_count": 16
+            },
+            {
+                "term_kr": "포함하다",
+                "term_en": "includes",
+                "description": "전체가 부분을 가지고 있는 관계.",
+                "synonyms": [
+                    "contains"
+                ],
+                "chunk_count": 30
+            },
+            {
+                "term_kr": "구성되다",
+                "term_en": "consists of",
+                "description": "여러 요소로 이루어져 있는 관계.",
+                "synonyms": [
+                    "comprises"
+                ],
+                "chunk_count": 9
+            },
+            {
+                "term_kr": "관련되다",
+                "term_en": "is related to",
+                "description": "서로 밀접한 연관이 있는 관계.",
+                "synonyms": [
+                    "associated_with"
+                ],
+                "chunk_count": 45
+            },
+            {
+                "term_kr": "생성하다",
+                "term_en": "produces",
+                "description": "새로운 것을 만들어내는 관계.",
+                "synonyms": [
+                    "generates"
+                ],
+                "chunk_count": 11
+            },
+            {
+                "term_kr": "억제하다",
+                "term_en": "inhibits",
+                "description": "활동이나 작용을 못하게 막는 관계.",
+                "synonyms": [
+                    "suppresses"
+                ],
+                "chunk_count": 7
+            },
+            {
+                "term_kr": "활성화하다",
+                "term_en": "activates",
+                "description": "기능이나 작용을 활발하게 하는 관계.",
+                "synonyms": [
+                    "stimulates"
+                ],
+                "chunk_count": 13
+            },
+            {
+                "term_kr": "변환하다",
+                "term_en": "converts",
+                "description": "형태나 성질을 바꾸는 관계.",
+                "synonyms": [
+                    "transforms"
+                ],
+                "chunk_count": 4
+            },
+            {
+                "term_kr": "조절하다",
+                "term_en": "regulates",
+                "description": "균형을 맞추거나 통제하는 관계.",
+                "synonyms": [
+                    "controls"
+                ],
+                "chunk_count": 19
+            },
+            {
+                "term_kr": "보호하다",
+                "term_en": "protects",
+                "description": "위험이나 손상으로부터 지키는 관계.",
+                "synonyms": [
+                    "guards"
+                ],
+                "chunk_count": 21
             }
         ],
         "kn_type_data": {
@@ -218,6 +543,108 @@
                     "relation": "보호하다",
                     "object": "수분 손실",
                     "chunk_count": 9
+                },
+                {
+                    "subject": "자외선",
+                    "relation": "유발하다",
+                    "object": "색소 침착",
+                    "chunk_count": 22
+                },
+                {
+                    "subject": "콜라겐",
+                    "relation": "유지하다",
+                    "object": "피부 탄력",
+                    "chunk_count": 18
+                },
+                {
+                    "subject": "활성산소",
+                    "relation": "가속화하다",
+                    "object": "피부 노화",
+                    "chunk_count": 25
+                },
+                {
+                    "subject": "히알루론산",
+                    "relation": "증가시키다",
+                    "object": "수분 보유력",
+                    "chunk_count": 14
+                },
+                {
+                    "subject": "레티놀",
+                    "relation": "개선하다",
+                    "object": "미세 주름",
+                    "chunk_count": 30
+                },
+                {
+                    "subject": "세라마이드",
+                    "relation": "강화하다",
+                    "object": "피부 장벽",
+                    "chunk_count": 11
+                },
+                {
+                    "subject": "여드름균",
+                    "relation": "유발하다",
+                    "object": "염증 반응",
+                    "chunk_count": 8
+                },
+                {
+                    "subject": "피지 과다",
+                    "relation": "막다",
+                    "object": "모공",
+                    "chunk_count": 16
+                },
+                {
+                    "subject": "스트레스",
+                    "relation": "악화시키다",
+                    "object": "피부 트러블",
+                    "chunk_count": 21
+                },
+                {
+                    "subject": "비타민 C",
+                    "relation": "억제하다",
+                    "object": "멜라닌 생성",
+                    "chunk_count": 19
+                },
+                {
+                    "subject": "수면 부족",
+                    "relation": "저하시키다",
+                    "object": "피부 재생",
+                    "chunk_count": 13
+                },
+                {
+                    "subject": "나이아신아마이드",
+                    "relation": "개선하다",
+                    "object": "피부 톤",
+                    "chunk_count": 27
+                },
+                {
+                    "subject": "AHA/BHA",
+                    "relation": "제거하다",
+                    "object": "묵은 각질",
+                    "chunk_count": 10
+                },
+                {
+                    "subject": "자외선 차단제",
+                    "relation": "예방하다",
+                    "object": "일광 화상",
+                    "chunk_count": 35
+                },
+                {
+                    "subject": "펩타이드",
+                    "relation": "촉진하다",
+                    "object": "콜라겐 합성",
+                    "chunk_count": 17
+                },
+                {
+                    "subject": "미세먼지",
+                    "relation": "유발하다",
+                    "object": "피부 자극",
+                    "chunk_count": 20
+                },
+                {
+                    "subject": "건조한 환경",
+                    "relation": "악화시키다",
+                    "object": "아토피 피부염",
+                    "chunk_count": 6
                 }
             ],
             "cat_concept": [

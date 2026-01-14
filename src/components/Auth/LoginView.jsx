@@ -17,7 +17,7 @@ const LoginView = () => {
             return;
         }
 
-        const success = login(id, password);
+        const success = login(id.trim(), password.trim());
         if (!success) {
             setError('아이디 또는 비밀번호가 올바르지 않습니다.');
         }
@@ -28,9 +28,9 @@ const LoginView = () => {
             <div className="w-full max-w-md p-8 bg-white shadow-xl rounded-2xl border border-gray-100">
                 <div className="text-center mb-8">
                     <div className="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center text-white text-xl font-bold mx-auto mb-4">
-                        K
+                        N
                     </div>
-                    <h1 className="text-2xl font-bold text-gray-900">KNOWLEARN Orchestra</h1>
+                    <h1 className="text-2xl font-bold text-gray-900">KNOWLEARN Ontology</h1>
                     <p className="text-gray-500 mt-2 text-sm">서비스 이용을 위해 로그인해주세요.</p>
                 </div>
 
@@ -67,16 +67,29 @@ const LoginView = () => {
                     </div>
 
                     <div className="flex items-center justify-between">
-                        <div className="flex items-center">
-                            <input
-                                id="remember-me"
-                                name="remember-me"
-                                type="checkbox"
-                                className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-                            />
-                            <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-900">
-                                아이디/비밀번호 기억하기
-                            </label>
+                        <div className="flex items-center gap-4">
+                            <div className="flex items-center">
+                                <input
+                                    id="save-id"
+                                    name="save-id"
+                                    type="checkbox"
+                                    className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                                />
+                                <label htmlFor="save-id" className="ml-2 block text-sm text-gray-900">
+                                    ID 저장
+                                </label>
+                            </div>
+                            <div className="flex items-center">
+                                <input
+                                    id="save-pw"
+                                    name="save-pw"
+                                    type="checkbox"
+                                    className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                                />
+                                <label htmlFor="save-pw" className="ml-2 block text-sm text-gray-900">
+                                    PW 저장
+                                </label>
+                            </div>
                         </div>
                     </div>
 

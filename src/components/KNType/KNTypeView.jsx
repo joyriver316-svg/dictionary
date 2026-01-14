@@ -10,7 +10,7 @@ const KNTypeView = () => {
     const [searchTerm, setSearchTerm] = useState("");
     const [isDetailOpen, setIsDetailOpen] = useState(true);
     const [currentPage, setCurrentPage] = useState(1);
-    const itemsPerPage = 30; // Compact view, maybe 30 is good
+    const itemsPerPage = 24;
 
     const data = knTypeData || [];
 
@@ -87,75 +87,90 @@ const KNTypeView = () => {
                         </div>
                     </div>
 
-                    <div className="flex-1 overflow-auto bg-white">
-                        <div className="sticky top-0 z-20 bg-white border-b border-gray-200 p-2">
-                            <div className="relative max-w-sm">
+                    <div className="flex-1 overflow-auto bg-white flex flex-col">
+                        <div className="sticky top-0 z-20 bg-white border-b border-gray-200 px-4 flex items-center min-h-[48px] justify-between gap-4 shrink-0">
+                            <div className="relative flex-1 max-w-sm">
                                 <input
                                     type="text"
                                     placeholder="트리플 검색 (주어, 관계, 목적어)..."
                                     value={searchTerm}
                                     onChange={handleSearchChange}
-                                    className="w-full border border-gray-300 rounded px-3 py-2 pl-9 text-sm focus:border-primary focus:outline-none"
+                                    className="w-full border border-gray-300 rounded px-3 py-1.5 pl-9 text-sm focus:border-primary focus:outline-none"
                                 />
-                                <Search className="absolute left-3 top-2.5 text-gray-400" size={14} />
+                                <Search className="absolute left-3 top-2 text-gray-400" size={14} />
                             </div>
                         </div>
-                        <table className="w-full text-left text-sm text-gray-700 table-fixed">
-                            <thead className="bg-gray-50 text-xs text-gray-500 font-medium sticky top-[53px] z-10 border-b border-gray-200">
-                                <tr>
-                                    <th className="px-3 py-2 font-normal w-[33%]">주어 (Subject)</th>
-                                    <th className="px-3 py-2 font-normal w-[33%]">관계 (Relation)</th>
-                                    <th className="px-3 py-2 font-normal w-[34%]">목적어 (Object)</th>
-                                </tr>
-                            </thead>
-                            <tbody className="divide-y divide-gray-100">
-                                {currentItems.map((item, index) => (
-                                    <tr
-                                        key={index}
-                                        className={classNames(
-                                            "hover:bg-blue-50 transition-colors cursor-pointer group",
-                                            selectedItem?.subject === item.subject && selectedItem?.object === item.object ? "bg-blue-50" : ""
-                                        )}
-                                        onClick={() => handleRowClick(item)}
-                                    >
-                                        <td className="px-3 py-1.5 align-top font-bold text-gray-900 break-words truncate">
-                                            <span title={item.subject}>{item.subject}</span>
-                                        </td>
-                                        <td className="px-3 py-1.5 align-top text-gray-600 break-words">
-                                            <span className="px-2 py-0.5 bg-gray-100 rounded text-xs border border-gray-200 inline-block max-w-full truncate" title={item.relation}>
-                                                {item.relation}
-                                            </span>
-                                        </td>
-                                        <td className="px-3 py-1.5 align-top font-bold text-gray-900 break-words truncate">
-                                            <span title={item.object}>{item.object}</span>
-                                        </td>
+
+                        <div className="flex-1 overflow-auto">
+                            <table className="w-full text-left text-sm text-gray-700 table-fixed">
+                                <thead className="bg-gray-50 text-xs text-gray-500 font-medium sticky top-0 z-10 border-b border-gray-200">
+                                    <tr>
+                                        <th className="px-4 py-2 font-normal w-[33%]">주어 (Subject)</th>
+                                        <th className="px-4 py-2 font-normal w-[33%]">관계 (Relation)</th>
+                                        <th className="px-4 py-2 font-normal w-[34%]">목적어 (Object)</th>
                                     </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    </div>
-                    {/* Pagination Footer */}
-                    {filteredData.length > 0 && (
-                        <div className="flex justify-center items-center gap-2 p-2 border-t border-gray-200 bg-white flex-shrink-0">
-                            <button
-                                onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
-                                disabled={currentPage === 1}
-                                className="p-1 rounded hover:bg-gray-100 disabled:opacity-30 text-gray-500"
-                            >
-                                <ChevronLeft size={16} />
-                            </button>
-                            <span className="text-xs text-gray-500 font-medium">
-                                {currentPage} / {totalPages}
-                            </span>
-                            <button
-                                onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
-                                disabled={currentPage === totalPages}
-                                className="p-1 rounded hover:bg-gray-100 disabled:opacity-30 text-gray-500"
-                            >
-                                <ChevronRight size={16} />
-                            </button>
+                                </thead>
+                                <tbody className="divide-y divide-gray-100">
+                                    {currentItems.map((item, index) => (
+                                        <tr
+                                            key={index}
+                                            className={classNames(
+                                                "hover:bg-blue-50 transition-colors cursor-pointer group h-10",
+                                                selectedItem?.subject === item.subject && selectedItem?.object === item.object ? "bg-blue-50" : ""
+                                            )}
+                                            onClick={() => handleRowClick(item)}
+                                        >
+                                            <td className="px-4 py-1 align-middle font-bold text-gray-900 break-words truncate">
+                                                <span title={item.subject}>{item.subject}</span>
+                                            </td>
+                                            <td className="px-4 py-1 align-middle text-gray-600 break-words">
+                                                <span className="px-2 py-0.5 bg-gray-100 rounded text-xs border border-gray-200 inline-block max-w-full truncate" title={item.relation}>
+                                                    {item.relation}
+                                                </span>
+                                            </td>
+                                            <td className="px-4 py-1 align-middle font-bold text-gray-900 break-words truncate">
+                                                <span title={item.object}>{item.object}</span>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
                         </div>
-                    )}
+
+                        {/* Pagination Footer */}
+                        {totalPages > 1 && (
+                            <div className="flex items-center justify-center gap-1 py-2 border-t border-gray-200 bg-gray-50 shrink-0">
+                                <button
+                                    onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                                    disabled={currentPage === 1}
+                                    className="p-1 rounded hover:bg-gray-200 disabled:opacity-30 disabled:hover:bg-transparent"
+                                >
+                                    <ChevronLeft size={16} />
+                                </button>
+                                <div className="flex gap-1">
+                                    {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
+                                        <button
+                                            key={page}
+                                            onClick={() => setCurrentPage(page)}
+                                            className={`w-6 h-6 flex items-center justify-center rounded text-xs font-medium transition-colors ${currentPage === page
+                                                ? 'bg-blue-500 text-white'
+                                                : 'text-gray-600 hover:bg-gray-200'
+                                                }`}
+                                        >
+                                            {page}
+                                        </button>
+                                    ))}
+                                </div>
+                                <button
+                                    onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                                    disabled={currentPage === totalPages}
+                                    className="p-1 rounded hover:bg-gray-200 disabled:opacity-30 disabled:hover:bg-transparent rotate-180"
+                                >
+                                    <ChevronLeft size={16} />
+                                </button>
+                            </div>
+                        )}
+                    </div>
                 </div>
 
                 {/* Right Pane: Graph Only */}
